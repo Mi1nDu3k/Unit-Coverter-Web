@@ -1,0 +1,68 @@
+﻿@page
+@model UnitConverterWeb.Pages.IndexModel
+@{
+    ViewData["Title"] = "Unit Converter";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card p-4">
+            <h4 class="text-center mb-3">Unit Converter</h4>
+
+            <div class="d-flex justify-content-center mb-3">
+                @foreach (var category in Model.Categories)
+                {
+                    var isActive = category == Model.Category ? "active-tab" : "";
+                    <a asp-page="./Index" asp-route-category="@category"
+                       class="mx-2 fw-bold @isActive">@category</a>
+                }
+            </div>
+
+            @if (Model.Result == null)
+            {
+                <form method="post">
+                    <input type="hidden" asp-for="Category" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Enter the @Model.Category.ToLower() to convert</label>
+                        <input asp-for="Value" type="number" step="any" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Unit to Convert from</label>
+                        <select asp-for="From" class="form-select">
+                            @foreach (var unit in Model.Units)
+                            {
+                                <option value="@unit">@unit</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Unit to Convert to</label>
+                        <select asp-for="To" class="form-select">
+                            @foreach (var unit in Model.Units)
+                            {
+                                <option value="@unit">@unit</option>
+                            }
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Convert</button>
+                </form>
+            }
+            else
+            {
+                <div class="text-center mt-4">
+                    <p class="fw-bold fs-5">Result of your calculation</p>
+                    <p class="fs-4"><strong>@Model.Value @Model.From</strong> = <strong>@Model.Result @Model.To</strong></p>
+
+                    <form method="get">
+                        <button class="btn btn-outline-secondary">Reset</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>
